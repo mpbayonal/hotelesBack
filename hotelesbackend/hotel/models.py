@@ -1,3 +1,63 @@
-from django.db import models
 
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
+from polymorphic.models import PolymorphicModel
 # Create your models here.
+
+from django.contrib.auth.models import AbstractUser, UserManager
+
+import datetime
+from django.db import models
+# Create your models here.
+class Usuario(AbstractUser, PolymorphicModel):
+    nombre = models.CharField(max_length=500)
+    descripcion = models.CharField(max_length=500)
+    direccion = models.CharField(max_length=255, blank=True, null=True)
+    telefono = models.CharField(max_length=255, blank=True, null=True)
+
+    class Meta:
+        verbose_name = 'usuario'
+        verbose_name_plural = 'usuarios'
+
+    objects = UserManager()
+
+class Hotel(Usuario):
+
+    class Meta:
+        verbose_name = 'hotel'
+        verbose_name_plural = 'hoteles'
+
+    def __str__(self):
+        return self.nombre
+
+class Cliente(Usuario):
+
+    class Meta:
+        verbose_name = 'cliente'
+        verbose_name_plural = 'clientes'
+
+    def __str__(self):
+        return self.nombre
+
+class Reserva(models.Model):
+    fechaInicio = models.DateTimeField(default=datetime.datetime.utcnow)
+    fechaFin = models.DateTimeField(default=datetime.datetime.utcnow)
+    fechaReserva = models.DateTimeField(default=datetime.datetime.utcnow)
+    hotel = models.ForeignKey(Hotel,  null=False, on_delete=models.CASCADE)
+    cliente = models.ForeignKey(Cliente, null=False, on_delete=models.CASCADE)
+    descripcion = models.CharField(max_length=500)
+    pago = models.IntegerField()
+
+    def __str__(self):
+        return self.nombre
+
+class Habitacion(models.Model):
+    numeroCamas = models.IntegerField()
+    costo =  models.IntegerField()
+    tipo = models.CharField(max_length=500)
+    reserva = models.ForeignKey(Reserva, null=True, on_delete=models.CASCADE)
+
+
+    def __str__(self):
+        return self.id
