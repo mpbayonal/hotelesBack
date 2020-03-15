@@ -44,20 +44,22 @@ class Reserva(models.Model):
     fechaInicio = models.DateTimeField(default=datetime.datetime.utcnow)
     fechaFin = models.DateTimeField(default=datetime.datetime.utcnow)
     fechaReserva = models.DateTimeField(default=datetime.datetime.utcnow)
-    hotel = models.ForeignKey(Hotel,  null=False, on_delete=models.CASCADE)
-    cliente = models.ForeignKey(Cliente, null=False, on_delete=models.CASCADE)
+    pHotel = models.ForeignKey(Hotel,  null=False, on_delete=models.CASCADE)
+    pCliente = models.ForeignKey(Cliente, null=False, on_delete=models.CASCADE)
     descripcion = models.CharField(max_length=500)
     pago = models.IntegerField()
 
+
     def __str__(self):
-        return self.nombre
+        return self.descripcion
 
 class Habitacion(models.Model):
     numeroCamas = models.IntegerField()
     costo =  models.IntegerField()
     tipo = models.CharField(max_length=500)
-    reserva = models.ForeignKey(Reserva, null=True, on_delete=models.CASCADE)
+    pReserva = models.ForeignKey(Reserva, models.SET_NULL, blank=True, null=True )
+    pHotel = models.ForeignKey(Hotel, null=False, on_delete=models.CASCADE)
 
 
     def __str__(self):
-        return self.id
+        return self.tipo
