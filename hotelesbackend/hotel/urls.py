@@ -12,7 +12,7 @@ urlpatterns = [
 
 
 
-    path('reserva/', views.ListReserva.as_view()),
+    path('reservas/', views.ListReserva.as_view()),
     path('reserva/<int:pk>/', views.DetailReserva.as_view()),
     path('habitacion/', views.ListHabitacion.as_view()),
     path('habitacion/<int:pk>/', views.DetailHabitacion.as_view()),
