@@ -44,7 +44,8 @@ class Cliente(Usuario):
 
 class Habitacion(models.Model):
     nombre = models.CharField(max_length=100)
-    numeroCamas = models.IntegerField()
+    numeroCamasDobles = models.IntegerField()
+    numeroCamasSencillas = models.IntegerField()
     costo = models.IntegerField()
     tipo = models.CharField(max_length=500)
     pHotel = models.ForeignKey(Hotel, null=False, on_delete=models.CASCADE)
