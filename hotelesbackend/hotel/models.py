@@ -1,4 +1,3 @@
-
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
@@ -9,6 +8,8 @@ from django.contrib.auth.models import AbstractUser, UserManager
 
 import datetime
 from django.db import models
+
+
 # Create your models here.
 class Usuario(AbstractUser, PolymorphicModel):
     nombre = models.CharField(max_length=500)
@@ -22,8 +23,8 @@ class Usuario(AbstractUser, PolymorphicModel):
 
     objects = UserManager()
 
-class Hotel(Usuario):
 
+class Hotel(Usuario):
     class Meta:
         verbose_name = 'hotel'
         verbose_name_plural = 'hoteles'
@@ -31,8 +32,8 @@ class Hotel(Usuario):
     def __str__(self):
         return self.nombre
 
-class Cliente(Usuario):
 
+class Cliente(Usuario):
     class Meta:
         verbose_name = 'cliente'
         verbose_name_plural = 'clientes'
@@ -40,26 +41,41 @@ class Cliente(Usuario):
     def __str__(self):
         return self.nombre
 
+
+class Habitacion(models.Model):
+    nombre = models.CharField(max_length=100)
+    numeroCamas = models.IntegerField()
+    costo = models.IntegerField()
+    tipo = models.CharField(max_length=500)
+    pHotel = models.ForeignKey(Hotel, null=False, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.tipo
+
+
 class Reserva(models.Model):
     fechaInicio = models.DateTimeField(default=datetime.datetime.utcnow)
     fechaFin = models.DateTimeField(default=datetime.datetime.utcnow)
     fechaReserva = models.DateTimeField(default=datetime.datetime.utcnow)
-    pHotel = models.ForeignKey(Hotel,  null=False, on_delete=models.CASCADE)
+    pHotel = models.ForeignKey(Hotel, null=False, on_delete=models.CASCADE)
     pCliente = models.ForeignKey(Cliente, null=False, on_delete=models.CASCADE)
+    pHabitacion = models.ManyToManyField( Habitacion)
     descripcion = models.CharField(max_length=500)
     pago = models.IntegerField()
-
 
     def __str__(self):
         return self.descripcion
 
-class Habitacion(models.Model):
-    numeroCamas = models.IntegerField()
-    costo =  models.IntegerField()
-    tipo = models.CharField(max_length=500)
-    pReserva = models.ForeignKey(Reserva, models.SET_NULL, blank=True, null=True )
-    pHotel = models.ForeignKey(Hotel, null=False, on_delete=models.CASCADE)
 
+
+
+class Servicio(models.Model):
+    fueCumplida = models.IntegerField()
+    descripcion = models.CharField(max_length=500)
+    pHotel = models.ForeignKey(Hotel, null=False, on_delete=models.CASCADE)
+    pReserva = models.ForeignKey(Reserva, null=False, on_delete=models.CASCADE)
+    pHabitacion = models.ForeignKey(Habitacion, null=False, on_delete=models.CASCADE)
+    pCliente = models.ForeignKey(Cliente, null=False, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.tipo
+        return self.descripcion
