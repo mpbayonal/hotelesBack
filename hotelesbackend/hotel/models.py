@@ -46,6 +46,8 @@ class Habitacion(models.Model):
     nombre = models.CharField(max_length=100)
     numeroCamasDobles = models.IntegerField()
     numeroCamasSencillas = models.IntegerField()
+    numeroMaximoNiños = models.IntegerField()
+    numeroMaximoAdultos = models.IntegerField()
     costo = models.IntegerField()
     tipo = models.CharField(max_length=500)
     pHotel = models.ForeignKey(Hotel, null=False, on_delete=models.CASCADE)
@@ -56,6 +58,8 @@ class Habitacion(models.Model):
 
 class Reserva(models.Model):
     fechaInicio = models.DateTimeField(default=datetime.datetime.utcnow)
+    numeroAdultos = models.IntegerField()
+    numeroNiños =models.IntegerField()
     fechaFin = models.DateTimeField(default=datetime.datetime.utcnow)
     fechaReserva = models.DateTimeField(default=datetime.datetime.utcnow)
     pHotel = models.ForeignKey(Hotel, null=False, on_delete=models.CASCADE)
